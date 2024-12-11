@@ -12,7 +12,10 @@ class ScenaryClouds:
 
 
 
-    def update(self):
+    def update(self, scenary):
+        if scenary.marioDeath:
+            pygame.mixer.music.stop()
+            return
         self.posX1 -= self.speed
         self.posX2 -= self.speed
 

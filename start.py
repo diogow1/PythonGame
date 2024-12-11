@@ -8,6 +8,7 @@ from data.enemys.FireBall import FireBall
 
 
 pygame.init()
+pygame.mixer.init()
 
 clock = pygame.time.Clock()
 
@@ -17,7 +18,7 @@ height = 600
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Super Mario")
 
-
+gameFinish = False
 
 scenary = ScenaryMove("data/assets/blocks.PNG", width, height, 3)
 scenaryClouds = ScenaryClouds("data/assets/clouds.PNG", width, 350, 2)
@@ -31,6 +32,10 @@ sprites = pygame.sprite.Group()
 sprites.add(player)
 sprites.add(fireball)
 sprites.add(fireBallTwo)
+scenary.scenaryTheme()
+
+
+
 
 while True:
     for event in pygame.event.get():
@@ -43,13 +48,20 @@ while True:
     scenaryClouds.draw(screen)
 
     scenary.update()
-    scenaryClouds.update()
+    scenaryClouds.update(scenary)
 
+    if currentTime - player.deathTick > 500 and player.deathState == True and scenary.scenaryPause== True:
+        print("oh!")
+        scenary.scenaryPause = False
+        player.deathAnimation()
+        
 
-    keys = pygame.key.get_pressed()
-    player.moving(keys)
-    fireball.moving(width, scenary)
-    fireball.playerCollision(player, scenary)
+    if scenary.scenaryPause== False:
+        keys = pygame.key.get_pressed()
+        player.moving(keys)
+        fireball.moving(width, scenary)
+        fireball.playerCollision(player, scenary)
+
 
 
     if currentTime > 2000:
@@ -60,8 +72,9 @@ while True:
     sprites.draw(screen)
 
     pygame.display.flip()
-
     clock.tick(60)
+
+
 
 
 

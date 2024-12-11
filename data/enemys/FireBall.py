@@ -38,5 +38,5 @@ class FireBall(pygame.sprite.Sprite):
             self.image = self.sprites[self.currentSprite]
 
     def playerCollision(self, player, scenary):
-        if self.rect.x - 30 <= player.rect.x and self.rect.x + 30 >= player.rect.x and self.rect.y - 40 < player.rect.y:
+        if self.rect.x - 30 <= player.rect.x and self.rect.x + 60 >= player.rect.x and self.rect.y - 30 < player.rect.y:
             player.death(scenary)

@@ -47,5 +47,7 @@
 ## OBS:
 
     > 10/12
-        Corrigir pequenas falhas que ocorrem no cenário quando ele é paralisado após o Mario morrer
-        Pensar sem outra forma de implementar o chão, se for possível sem ter que refatorar praticamente o código inteiro...
+        Corrigir pequenas falhas que ocorrem no cenário quando ele é paralisado após o Mario morrer ✅
+        Pensar sem outra forma de implementar o chão, se for possível sem ter que refatorar praticamente o código inteiro... ❌
+
+    

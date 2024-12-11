@@ -17,6 +17,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = (40, 523)  
         self.playerSpeed = 5 
         self.deathState = False
+        self.deathSound = pygame.mixer.Sound("data\sounds\mario_death.mp3")
+        self.deathTick = 0
         self.noDobleJump = False
         #self.doubleJump = False
 
@@ -26,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 0.8
         self.speedY = 0
         self.floor = 523  
+        self.jumpSound = pygame.mixer.Sound("data\sounds\mario_jump.mp3")
 
         self.animationTime = 100  
         self.lastUpdate = pygame.time.get_ticks() 
@@ -34,6 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.lastTick = pygame.time.get_ticks()
 
     def moving(self, keys):
+        self.applyGravity()
         if self.deathState:
             return
         isMoving = True
@@ -49,6 +53,9 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x = 740
             self.animationTime = 50
         if keys[pygame.K_UP]:# and not self.flying:
+            if self.flying == False and self.deathState == False:
+                self.jumpSound.set_volume(0.02)
+                self.jumpSound.play()
             now = pygame.time.get_ticks()
             if self.flying == False:
                 #print("Saving tick... ", self.lastTick)
@@ -63,8 +70,6 @@ class Player(pygame.sprite.Sprite):
             if self.rect.y >= 400:
                 self.jump()
                 #print(now)
-            else:
-                self.noDobleJump = True
 
 
                 
@@ -75,12 +80,11 @@ class Player(pygame.sprite.Sprite):
         if isMoving:
             self.updateSprites()
 
-        self.applyGravity()
         self.animationTime = 100
 
+
+
     def applyGravity(self):
-        if self.deathState:
-            return
 
         self.speedY += self.gravity # 1o frame: -10 + 0.4 = -9.6 | 2o frame: -9.6 + 0.4 = -9.2 | 3o frame: -9.2 + 0.4 = -8.8 | 4o frame: -8.8 + 0.4 = -8.4 | 5o frame: -8.4 + 0.4 = -8.0
         self.rect.y += self.speedY # 1o frame: 485 + (-9.6) = 475.4 | 2o frame: 475.4 + (-9.2) = 466.2 | 3o frame: 466.2 + (-8.8) = 457.4 | 4o frame: 457.4 + (-8.4) = 449.0 | 5o frame: 449.0 + -(8.0) = 441.0
@@ -100,6 +104,8 @@ class Player(pygame.sprite.Sprite):
             self.flying = True
 
 
+
+
     def updateSprites(self):
         if self.flying:
             self.image = self.sprites[2]
@@ -113,8 +119,40 @@ class Player(pygame.sprite.Sprite):
 
 
     def death(self, scenary):
-        self.currentSprite = 3
-        self.image = self.sprites[self.currentSprite]
-        self.deathState = True
-        scenary.marioDeath = True
+        if self.deathState == False:
+            self.deathSound.set_volume(0.1)
+            self.deathSound.play()
+            self.deathState = True
+            scenary.marioDeath = True
+            scenary.scenaryPause = True
+            self.deathTick = pygame.time.get_ticks()
+
+            self.currentSprite = 3
+            self.image = self.sprites[self.currentSprite]
             
+
+
+
+
+
+
+        
+        
+
+    def deathAnimation(self):
+            self.noDobleJump = False
+            self.floor = 600
+            self.jump()
+
+
+                
+            
+        
+
+
+
+
+
+            
+
+    
